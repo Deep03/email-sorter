@@ -4,3 +4,4 @@ quickstart.py
 .DS_Store
 data/token.json
 data/label_data.json
+test.txt

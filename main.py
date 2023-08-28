@@ -1,6 +1,7 @@
 from __future__ import print_function
 
-import os.path
+import os.path, email
+import base64
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -15,10 +16,10 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
 "https://www.googleapis.com/auth/gmail.send",	
 "https://www.googleapis.com/auth/gmail.compose",
 "https://www.googleapis.com/auth/gmail.insert",	
-"https://www.googleapis.com/auth/gmail.modify",	
-"https://www.googleapis.com/auth/gmail.metadata",	
+"https://www.googleapis.com/auth/gmail.modify",		
 "https://www.googleapis.com/auth/gmail.settings.basic",	
 "https://www.googleapis.com/auth/gmail.settings.sharing"]
+
 
 def main():
     """Shows basic usage of the Gmail API.
@@ -42,56 +43,61 @@ def main():
         with open('data/token.json', 'w') as token:
             token.write(creds.to_json())
 
+
     try:
         # Call the Gmail API
         service = build('gmail', 'v1', credentials=creds)
-        emails = service.users().messages().list(userId='me').execute()
-        msgs = emails.get('messages', [])
-        keys_list = []
-        for dict_id in msgs:
-            id_value = dict_id['id']
-            keys_list.append(id_value)
-        # Specify message IDs to modify
-        # message_ids = keys_list
-
-        # # Specify label IDs to add and remove
-        # labels_to_add = ['Label_6']  # Replace with actual label IDs
-        # labels_to_remove = [""]  # Replace with actual label IDs
-
-        # # Construct modify request body
-        # modify_body = {
-        #     "addLabelIds": labels_to_add,
-        # }
-        # try:
-        #     response = service.users().messages().modify(userId='me', id="18a06f5692a26bfb", body=modify_body).execute()
-        # except HttpError as error:
-        # # TODO(developer) - Handle errors from gmail API.
-        #     print(f'An error occurred: {error}')
 
         results = service.users().labels().list(userId='me').execute()
-
         labels = results.get('labels', [])
-        with open('data/label_data.json', 'r') as json_file:
-            ex_data = json.load(json_file)
-        json_file.close()
-        with open('data/label_data.json', 'w+') as json_file:
-            for label in labels:
-                l_name = label['name']
-                l_id = label['id']
-                # efficient file entry
-                if l_name not in ex_data['label_name']:
-                    ex_data["label_name"].append(l_name)
-                if l_id not in ex_data['label_id']:
-                    ex_data["label_id"].append(l_id)
-            json.dump(ex_data, json_file, indent=4)
-        json_file.close()
-
-
-
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
+        print(f'An error occurred: {error}') 
 
+    # data entry in data/label_data.json --- -- to be writtten into a function
+    with open('data/label_data.json', 'r') as json_file:
+        ex_data = json.load(json_file)
+    json_file.close()
+    with open('data/label_data.json', 'w+') as json_file:
+        for label in labels:
+            l_name = label['name']
+            l_id = label['id']
+            # efficient file entry
+            if l_name not in ex_data['label_names']:
+                ex_data["label_names"].append(l_name)
+            if l_id not in ex_data['label_ids']:
+                ex_data["label_ids"].append(l_id)
+        json.dump(ex_data, json_file, indent=4)
+    json_file.close()
 
+    # # data entry for msgs.json(msg_id) -- to be writtten into a function
+    # emails = service.users().messages().list(userId='me', **{'maxResults': 500}).execute()
+    # msgs = emails.get('messages', [])
+
+    # with open('data/msgs.json', 'r') as msg_file:
+    #     exst_data = json.load(msg_file)
+    # msg_file.close()
+    # with open('data/msgs.json', 'w+') as msg_file:
+    #     for dict_id in msgs:
+    #         id_value = dict_id['id']
+    #         if id_value not in exst_data['msg_ids']:
+    #             exst_data["msg_ids"].append(id_value)
+    #     json.dump(exst_data, msg_file, indent=4)
+    # msg_file.close()
+
+    # # data entry for msgs.json(msg_strs) -- to be writtten into a function
+    # with open('data/msgs.json', 'r') as msg_file:
+    #     msg_data = json.load(msg_file)
+    # msg_file.close()
+    # with open('data/msgs.json', 'w+') as msg_file:
+    #     for msg_id in msg_data['msg_ids']:
+    #         body_message = service.users().messages().get(userId='me', id=msg_id, format='raw').execute()
+    # msg_file.close()
+
+    def base64_decode(data):
+        msg_str = base64.urlsafe_b64decode(data)
+        return msg_str
+
+            
 if __name__ == '__main__':
     main()
