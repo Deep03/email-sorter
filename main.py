@@ -70,29 +70,44 @@ def main():
         json.dump(ex_data, json_file, indent=4)
     json_file.close()
 
-    # # data entry for msgs.json(msg_id) -- to be writtten into a function
-    # emails = service.users().messages().list(userId='me', **{'maxResults': 500}).execute()
-    # msgs = emails.get('messages', [])
+    # data entry for msgs.json(msg_id) -- to be writtten into a function
+    emails = service.users().messages().list(userId='me', **{'maxResults': 500}).execute()
+    msgs = emails.get('messages', [])
+    try:
+        with open('data/msgs.json', 'r') as msg_file:
+            exst_data = json.load(msg_file)
+        msg_file.close()
+    except Exception as e:
+        with open('data/msgs.json', 'w+') as msg_file:
+            print("Error: Here")
+            test_data  = {'msg_strs': [], 'msg_ids': []}
+            json.dump(test_data, exst_data, indent=4)
+        msg_file.close()
+        
+    with open('data/msgs.json', 'w+') as msg_file:
+        for dict_id in msgs:
+            id_value = dict_id['id']
+            if id_value not in exst_data['msg_ids']:
+                exst_data["msg_ids"].append(id_value)
+        json.dump(exst_data, msg_file, indent=4)
+    msg_file.close()
 
-    # with open('data/msgs.json', 'r') as msg_file:
-    #     exst_data = json.load(msg_file)
-    # msg_file.close()
-    # with open('data/msgs.json', 'w+') as msg_file:
-    #     for dict_id in msgs:
-    #         id_value = dict_id['id']
-    #         if id_value not in exst_data['msg_ids']:
-    #             exst_data["msg_ids"].append(id_value)
-    #     json.dump(exst_data, msg_file, indent=4)
-    # msg_file.close()
+    # data entry for msgs.json(msg_strs) -- to be writtten into a function
+    try:
+        with open('data/msgs.json', 'r') as msg_file:
+            msg_data = json.load(msg_file)
+        msg_file.close()
+    except Exception as e:
+        with open('data/msgs.json', 'w+') as msg_file:
+            print("Error: Here")
+            test_data  = {'msg_strs': [], 'msg_ids': []}
+            json.dump(test_data, msg_file, indent=4)
+        msg_file.close()
 
-    # # data entry for msgs.json(msg_strs) -- to be writtten into a function
-    # with open('data/msgs.json', 'r') as msg_file:
-    #     msg_data = json.load(msg_file)
-    # msg_file.close()
-    # with open('data/msgs.json', 'w+') as msg_file:
-    #     for msg_id in msg_data['msg_ids']:
-    #         body_message = service.users().messages().get(userId='me', id=msg_id, format='raw').execute()
-    # msg_file.close()
+    with open('data/msgs.json', 'w+') as msg_file:
+        for msg_id in msg_data['msg_ids']:
+            body_message = service.users().messages().get(userId='me', id=msg_id, format='raw').execute()
+    msg_file.close()
 
     def base64_decode(data):
         msg_str = base64.urlsafe_b64decode(data)
