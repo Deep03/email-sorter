@@ -2,5 +2,8 @@ credentials.json
 venv
 quickstart.py
 .DS_Store
-data
+data/credentials.json
+data/label_data.json
+data/msgs.json
+data/token.json
 test.txt

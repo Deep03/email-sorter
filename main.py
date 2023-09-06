@@ -79,9 +79,10 @@ def main():
         msg_file.close()
     except Exception as e:
         with open('data/msgs.json', 'w+') as msg_file:
-            print("Error: Here")
-            test_data  = {'msg_strs': [], 'msg_ids': []}
-            json.dump(test_data, exst_data, indent=4)
+ 
+            exst_data  = {'msg_strs': [], 'msg_ids': []}
+            msg_file.write(json.dumps(exst_data))
+         
         msg_file.close()
         
     with open('data/msgs.json', 'w+') as msg_file:
@@ -109,9 +110,7 @@ def main():
             body_message = service.users().messages().get(userId='me', id=msg_id, format='raw').execute()
     msg_file.close()
 
-    def base64_decode(data):
-        msg_str = base64.urlsafe_b64decode(data)
-        return msg_str
+
 
             
 if __name__ == '__main__':
