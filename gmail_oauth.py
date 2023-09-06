@@ -8,8 +8,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import json, base64, email, time
 
-
-
 # DO NOT EDIT THE FOLLOWING:
 class CredsUser:
     SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',	
@@ -27,6 +25,8 @@ class CredsUser:
         if os.path.exists('data/token.json'):
             creds = Credentials.from_authorized_user_file('data/token.json', cls.SCOPES)
         
+        
+        
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
@@ -35,7 +35,11 @@ class CredsUser:
                 creds = flow.run_local_server(port=0)
             with open('data/token.json', 'w') as token:
                 token.write(creds.to_json())
-        service = build('gmail', 'v1', credentials=creds)
+        try:
+            service = build('gmail', 'v1', credentials=creds)
+        except:
+            creds.refresh(Request())
+            service = build('gmail', 'v1', credentials=creds)
         return service
 client = CredsUser()
 service = client.get_creds()
@@ -122,6 +126,7 @@ class UserDetail():
                     print("false")
         msg_file.close()
 
+# append mode appends instead of writing, temp solution
         with open('data/msgs.json', 'w') as f:
             json.dump(exst_data, f, indent=4)
         f.close()
