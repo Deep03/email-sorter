@@ -22,25 +22,6 @@ This repository contains a Python script that connects to Gmail using the Gmail 
     pip install -r requirements.txt
     ```
 
-3. Set up the Gmail API:
-   
-    - Follow the instructions in the [Gmail API Quickstart Guide](https://developers.google.com/gmail/api/quickstart/python) to enable the Gmail API for your Google account.
-    - Download the `credentials.json` file and save it in the project directory.
-
-4. Configure custom labels and rules:
-
-    - Open the `config.json` file and define your custom labels and sorting rules. For example:
-
-    ```json
-    {
-        "labels": {
-            "work": ["work@example.com"],
-            "friends": ["friend1@example.com", "friend2@example.com"]
-        },
-        "default_label": "other"
-    }
-    ```
-
 ### Usage
 
 - Run the script `email_sorter.py`:
@@ -50,8 +31,6 @@ This repository contains a Python script that connects to Gmail using the Gmail 
     ```
 
 - The script will connect to your Gmail account, fetch unread emails, and sort them into the specified custom labels based on your rules.
-
-### Email Sorter
 
 **For M1/M2 tensorflow-text:**
 - download from: https://github.com/sun1638650145/Libraries-and-Extensions-for-TensorFlow-for-Apple-Silicon/releases/tag/v2.15
@@ -70,8 +49,7 @@ Contributions are welcome! If you find any bugs or have suggestions for improvem
 
 ### License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
+This project is licensed under the MIT License.
 ### Disclaimer
 
-This script accesses your Gmail account and may modify your email labels. Use it responsibly and at your own risk.
+This script accesses your Gmail account for your emails and modifies your email labels. Use it responsibly and at your own risk.
