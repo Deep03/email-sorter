@@ -25,8 +25,6 @@ class CredsUser:
         if os.path.exists('data/token.json'):
             creds = Credentials.from_authorized_user_file('data/token.json', cls.SCOPES)
         
-        
-        
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
