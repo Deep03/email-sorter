@@ -1,3 +1,5 @@
+# tried using BERT to filter sensitive data
+
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 
@@ -43,9 +45,8 @@ Unsubscribe
  Chess‌.‌com | PO Box 970397 Orem, UT 84097 
 
  ©2023 
-
  """
 ner_results = nlp(email_content)
 print(ner_results)
-# sensitive_words = {result['word'] for result in ner_results}
-# print(sensitive_words)
+sensitive_words = {result['word'] for result in ner_results}
+print(sensitive_words)
